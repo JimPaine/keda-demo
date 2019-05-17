@@ -5,13 +5,6 @@ resource "tls_private_key" "keda" {
   rsa_bits  = 4096
 }
 
-resource "azurerm_role_assignment" "keda" {
-  scope              = "${azurerm_virtual_network.keda.id}"
-  role_definition_name = "Network Contributor"
-  principal_id       = "${var.client_id}"
-}
-
-
 resource "azurerm_kubernetes_cluster" "keda" {
   name                = "${var.resource_name}${random_id.keda.dec}"
   location            = "${azurerm_resource_group.keda.location}"
