@@ -3,7 +3,7 @@ resource "helm_release" "keda" {
     name      = "keda"
     chart     = "kedacore/keda-edge"
 
-    namespace = "Default"
+    namespace = "default"
 
     devel = "true"
 
@@ -19,7 +19,7 @@ resource "helm_release" "osiris" {
     name      = "osiris"
     chart     = "osiris/osiris-edge"
 
-    namespace = "Default"
+    namespace = "default"
 
     devel = "true"
 }
