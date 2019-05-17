@@ -85,6 +85,7 @@ stages:
       - script: |
           unzip Azure.Functions.Cli.linux-x64.2.7.1158.zip
           chmod +x func
+          export PATH=`pwd`:$PATH
         displayName: 'unzip func cli'
         workingDirectory: ./functions/http
       - script: func init --docker-only
