@@ -25,7 +25,7 @@ resource "azurerm_kubernetes_cluster" "keda" {
     admin_username = "clusteradmin"
 
     ssh_key {
-      key_data = "${tls_private_key.aks.public_key_openssh}"
+      key_data = "${tls_private_key.keda.public_key_openssh}"
     }
   }
 
