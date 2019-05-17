@@ -1,9 +1,9 @@
 locals {
   dockercfg = {
-    "${azurerm_container_registry.aks.login_server}" = {
+    "${azurerm_container_registry.keda.login_server}" = {
       email    = "notneeded@notneeded.com"
-      username = "${azurerm_container_registry.aks.admin_username}"
-      password = "${azurerm_container_registry.aks.admin_password}"
+      username = "${azurerm_container_registry.keda.admin_username}"
+      password = "${azurerm_container_registry.keda.admin_password}"
     }
   }
 }
