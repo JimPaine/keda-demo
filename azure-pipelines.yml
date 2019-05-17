@@ -5,7 +5,7 @@ stages:
     - group: 'Terraform Service Principal'
     - group: 'Terraform State'
     - name: tfstate_key
-      value: 'jimpaine.keda-demor.master.tfstate'
+      value: 'jimpaine.keda-demo.master.tfstate'
     - name: resource_name
       value: 'keda'
 
