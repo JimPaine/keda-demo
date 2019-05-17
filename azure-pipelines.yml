@@ -74,13 +74,13 @@ stages:
       - script: wget https://github.com/Azure/azure-functions-core-tools/releases/download/2.7.1158/Azure.Functions.Cli.linux-x64.2.7.1158.zip
         displayName: 'download func cli'
         workingDirectory: ./functions/http
-      - script: unzip -d func Azure.Functions.Cli.linux-x64.2.7.1158.zip
+      - script: unzip Azure.Functions.Cli.linux-x64.2.7.1158.zip
         displayName: 'unzip func cli'
         workingDirectory: ./functions/http
-      - script: chmod +x ./func/func
+      - script: chmod +x func
         displayName: 'make func executable'
         workingDirectory: ./functions/http
-      - script: ./func/func init --docker-only
+      - script: ./func init --docker-only
         displayName: 'Dockerise func'
         workingDirectory: ./functions/http
       - script: |
