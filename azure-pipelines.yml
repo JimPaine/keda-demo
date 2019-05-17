@@ -150,5 +150,5 @@ stages:
   
         workingDirectory: ./env
         displayName: 'Get kubeconfig and ACR server'
-      - script: ./func kubernetes deploy --name $(Build.BuildId) --image-name http:$(Build.BuildId) --registry $(acr_server) --pull-secret registry 
+      - script: ./func kubernetes deploy --name $(Build.BuildId) --image-name http:$(Build.BuildId) --registry $(acr_server) --pull-secret registry --no-docker
         displayName: 'Deploy http func'
