@@ -9,8 +9,6 @@ locals {
 }
 
 resource "kubernetes_secret" "demo" {
-  depends_on = ["kubernetes_namespace.dev"]
-
   metadata {
     name      = "registry"
     namespace = "Default"
