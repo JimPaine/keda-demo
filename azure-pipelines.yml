@@ -111,10 +111,13 @@ stages:
         displayName: 'docker build'
       - script: docker push $(acr_server)/http:$(Build.BuildId)  
         displayName: 'docker push'
+      - script: ./func kubernetes deploy --name $(Build.BuildId) --image-name http:$(Build.BuildId) --registry $(acr_server) --pull-secret registry --dry-run
+        displayName: 'Generate k8s deployment'
+        workingDirectory: ./functions/http
       - task: PublishPipelineArtifact@0
         inputs:
-          artifactName: 'dockerfile' 
-          targetPath: './functions/http/Dockerfile'
+          artifactName: 'deploy' 
+          targetPath: './functions/http/deployment.yaml'
 
 - stage: Deploy
   jobs:
@@ -129,15 +132,6 @@ stages:
       pool:      
         vmImage: 'Ubuntu-16.04'
       steps:
-      - script: wget https://github.com/Azure/azure-functions-core-tools/releases/download/2.7.1158/Azure.Functions.Cli.linux-x64.2.7.1158.zip
-        displayName: 'download func cli'
-        workingDirectory: '$(System.ArtifactsDirectory)'
-      - script: unzip Azure.Functions.Cli.linux-x64.2.7.1158.zip
-        displayName: 'unzip func cli'
-        workingDirectory: '$(System.ArtifactsDirectory)'
-      - script: chmod +x func
-        displayName: 'make func executable'
-        workingDirectory: '$(System.ArtifactsDirectory)'
       - script: |
           terraform init \
             -backend-config="resource_group_name=$(tfstate_resource_group)" \
@@ -160,8 +154,8 @@ stages:
       - task: DownloadPipelineArtifact@1
         inputs:
           buildType: current
-          artifactName: dockerfile
-          downloadPath: '$(System.ArtifactsDirectory)' 
-      - script: ./func kubernetes deploy --name $(Build.BuildId) --image-name http:$(Build.BuildId) --registry $(acr_server) --pull-secret registry
-        displayName: 'Deploy http func'
-        workingDirectory: '$(System.ArtifactsDirectory)' 
+          artifactName: deploy
+          downloadPath: '$(System.ArtifactsDirectory)'
+      - script: kubectl apply -f deployment.yaml
+        displayName: 'kubectl apply -f deployment.yaml'
+        workingDirectory: '$(System.ArtifactsDirectory)''
