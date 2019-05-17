@@ -91,7 +91,7 @@ stages:
             -backend-config="key=$(tfstate_key)" \
             -backend-config="access_key=$(tfstate_access_key)"
   
-        workingDirectory: ./functions/http
+        workingDirectory: ./env
         displayName: 'Terraform init'
       - script: |
           acr_server=$(terraform output -json acr_server | jq '.value' | tr -d '"')   
@@ -103,7 +103,7 @@ stages:
           acr_user=$(terraform output -json acr_user | jq '.value' | tr -d '"')   
           echo "##vso[task.setvariable variable=acr_user;]$acr_user"
   
-        workingDirectory: ./functions/http
+        workingDirectory: ./env
         displayName: 'Get ACR details'
       - script: docker login -u $(acr_user) -p $(acr_password) $(acr_server)
         displayName: 'docker login'
