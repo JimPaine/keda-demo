@@ -85,7 +85,9 @@ stages:
       - script: unzip Azure.Functions.Cli.linux-x64.2.7.1158.zip
         displayName: 'unzip func cli'
         workingDirectory: ./functions/http
-      - script: func init --docker-only
+      - script: |
+          ls
+          func init --docker-only
         displayName: 'Dockerise func'
         workingDirectory: ./functions/http
       - script: |
