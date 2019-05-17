@@ -131,10 +131,13 @@ stages:
       steps:
       - script: wget https://github.com/Azure/azure-functions-core-tools/releases/download/2.7.1158/Azure.Functions.Cli.linux-x64.2.7.1158.zip
         displayName: 'download func cli'
+        workingDirectory: '$(System.ArtifactsDirectory)'
       - script: unzip Azure.Functions.Cli.linux-x64.2.7.1158.zip
         displayName: 'unzip func cli'
+        workingDirectory: '$(System.ArtifactsDirectory)'
       - script: chmod +x func
         displayName: 'make func executable'
+        workingDirectory: '$(System.ArtifactsDirectory)'
       - script: |
           terraform init \
             -backend-config="resource_group_name=$(tfstate_resource_group)" \
