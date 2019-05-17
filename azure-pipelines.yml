@@ -158,4 +158,4 @@ stages:
           downloadPath: '$(System.ArtifactsDirectory)'
       - script: kubectl apply -f deployment.yaml
         displayName: 'kubectl apply -f deployment.yaml'
-        workingDirectory: '$(System.ArtifactsDirectory)''
+        workingDirectory: '$(System.ArtifactsDirectory)'
