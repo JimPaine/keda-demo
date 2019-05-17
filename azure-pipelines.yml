@@ -80,7 +80,7 @@ stages:
       - script: chmod +x func
         displayName: 'make func executable'
         workingDirectory: ./functions/http
-      - script: ./func init --docker-only
+      - script: ./func init --docker-only --worker-runtime dotnet
         displayName: 'Dockerise func'
         workingDirectory: ./functions/http
       - script: |
