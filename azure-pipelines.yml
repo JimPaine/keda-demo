@@ -111,6 +111,10 @@ stages:
         displayName: 'docker build'
       - script: docker push $(acr_server)/http:$(Build.BuildId)  
         displayName: 'docker push'
+      - task: PublishPipelineArtifact@0
+        inputs:
+          artifactName: 'dockerfile' 
+          targetPath: './functions/http/Dockerfile'
 
 - stage: Deploy
   jobs:
@@ -150,5 +154,11 @@ stages:
   
         workingDirectory: ./env
         displayName: 'Get kubeconfig and ACR server'
-      - script: ./func kubernetes deploy --name $(Build.BuildId) --image-name http:$(Build.BuildId) --registry $(acr_server) --pull-secret registry --no-docker
+      - task: DownloadPipelineArtifact@1
+        inputs:
+          buildType: current
+          artifactName: dockerfile
+          downloadPath: '$(System.ArtifactsDirectory)' 
+      - script: ./func kubernetes deploy --name $(Build.BuildId) --image-name http:$(Build.BuildId) --registry $(acr_server) --pull-secret registry
         displayName: 'Deploy http func'
+        workingDirectory: '$(System.ArtifactsDirectory)' 
