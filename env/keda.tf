@@ -1,5 +1,4 @@
 resource "helm_release" "keda" {
-    depends_on = ["azurerm_role_assignment.aks"]
 
     name      = "keda"
     chart     = "kedacore/keda-edge"
@@ -16,7 +15,6 @@ resource "helm_release" "keda" {
 }
 
 resource "helm_release" "osiris" {
-    depends_on = ["azurerm_role_assignment.aks"]
 
     name      = "osiris"
     chart     = "osiris/osiris-edge"
