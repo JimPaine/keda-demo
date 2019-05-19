@@ -1,5 +1,5 @@
 output "kubeconfig" {
-    value = "${azurerm_kubernetes_cluster.keda.kube_config}"
+    value = "${azurerm_kubernetes_cluster.keda.kube_config_raw}"
 }
 
 output "acr_server" {
