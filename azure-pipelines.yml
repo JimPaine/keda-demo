@@ -144,7 +144,7 @@ stages:
         displayName: 'Terraform init'
       - script: |
           kubeconfig=$(terraform output -json kubeconfig | jq '.value' | tr -d '"')
-          echo $kubeconfig > $HOME/.kube/config
+          echo '$kubeconfig' > $HOME/.kube/config
           
           acr_server=$(terraform output -json acr_server | jq '.value' | tr -d '"')   
           echo "##vso[task.setvariable variable=acr_server;]$acr_server"
