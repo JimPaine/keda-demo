@@ -232,10 +232,46 @@ stages:
       - task: DownloadPipelineArtifact@1
         inputs:
           buildType: current
-          artifactName: deploy
+          artifactName: http
           downloadPath: '$(System.ArtifactsDirectory)'
+      - script: kubectl apply -f deployment.yaml
+        displayName: 'kubectl apply -f deployment.yaml'
+        workingDirectory: '$(System.ArtifactsDirectory)'
+
+    - job: QueueFunction
+      variables:
+        - group: 'Terraform Service Principal'
+        - group: 'Terraform State'
+        - name: tfstate_key
+          value: 'jimpaine.keda-demo.master.tfstate'
+        - name: resource_name
+          value: 'keda'
+      pool:      
+        vmImage: 'Ubuntu-16.04'
+      steps:
       - script: |
-          ls
-          kubectl apply -f deployment.yaml
+          terraform init \
+            -backend-config="resource_group_name=$(tfstate_resource_group)" \
+            -backend-config="storage_account_name=$(tfstate_storage_account)" \
+            -backend-config="container_name=$(tfstate_container)" \
+            -backend-config="key=$(tfstate_key)" \
+            -backend-config="access_key=$(tfstate_access_key)"
+  
+        workingDirectory: ./env
+        displayName: 'Terraform init'
+      - script: |
+          kubeconfig=$(terraform output -json kubeconfig | jq '.value' | tr -d '"')
+          mkdir ~/.kube/
+          touch ~/.kube/config
+          echo -e "$kubeconfig" > ~/.kube/config
+  
+        workingDirectory: ./env
+        displayName: 'Get kubeconfig'
+      - task: DownloadPipelineArtifact@1
+        inputs:
+          buildType: current
+          artifactName: queue
+          downloadPath: '$(System.ArtifactsDirectory)'
+      - script: kubectl apply -f deployment.yaml
         displayName: 'kubectl apply -f deployment.yaml'
         workingDirectory: '$(System.ArtifactsDirectory)'
