@@ -111,7 +111,7 @@ stages:
         displayName: 'docker build'
       - script: docker push $(acr_server)/http:$(Build.BuildId)  
         displayName: 'docker push'
-      - script: ./func kubernetes deploy --name http$(Build.BuildId) --image-name http:$(Build.BuildId) --registry $(acr_server) --pull-secret registry --dry-run --csharp > deployment.yaml
+      - script: ./func kubernetes deploy --name http --image-name http:$(Build.BuildId) --registry $(acr_server) --pull-secret registry --dry-run --csharp > deployment.yaml
         displayName: 'Generate k8s deployment'
         workingDirectory: ./functions/http
       - task: PublishPipelineArtifact@0
