@@ -146,7 +146,7 @@ stages:
           kubeconfig=$(terraform output -json kubeconfig | jq '.value' | tr -d '"')
           mkdir ~/.kube/
           touch ~/.kube/config
-          echo '$kubeconfig' > ~/.kube/config
+          echo -e "$kubeconfig" > ~/.kube/config
   
         workingDirectory: ./env
         displayName: 'Get kubeconfig'
