@@ -144,13 +144,11 @@ stages:
         displayName: 'Terraform init'
       - script: |
           kubeconfig=$(terraform output -json kubeconfig | jq '.value' | tr -d '"')
+          mkdir .kube
           echo '$kubeconfig' > $HOME/.kube/config
-          
-          acr_server=$(terraform output -json acr_server | jq '.value' | tr -d '"')   
-          echo "##vso[task.setvariable variable=acr_server;]$acr_server"
   
         workingDirectory: ./env
-        displayName: 'Get kubeconfig and ACR server'
+        displayName: 'Get kubeconfig'
       - task: DownloadPipelineArtifact@1
         inputs:
           buildType: current
@@ -158,6 +156,6 @@ stages:
           downloadPath: '$(System.ArtifactsDirectory)'
       - script: |
           ls
-          kubectl apply -f ./deploy/deployment.yaml
+          kubectl apply -f deployment.yaml
         displayName: 'kubectl apply -f deployment.yaml'
         workingDirectory: '$(System.ArtifactsDirectory)'
