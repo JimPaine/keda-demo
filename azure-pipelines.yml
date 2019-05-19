@@ -143,19 +143,20 @@ stages:
         workingDirectory: ./env
         displayName: 'Terraform init'
       - script: |
-          kubeconfig=$(terraform output -json kubeconfig | jq '.value' | tr -d '"')
-          mkdir .kube
-          echo '$kubeconfig' > $HOME/.kube/config
-  
+          resource_group=$(terraform output -json resource_group | jq '.value' | tr -d '"')   
+          echo "##vso[task.setvariable variable=resource_group;]$resource_group"
+          cluster_name=$(terraform output -json cluster_name | jq '.value' | tr -d '"')   
+          echo "##vso[task.setvariable variable=cluster_name;]$cluster_name"
+
         workingDirectory: ./env
-        displayName: 'Get kubeconfig'
+        displayName: 'Get cluster'
       - task: DownloadPipelineArtifact@1
         inputs:
           buildType: current
           artifactName: deploy
           downloadPath: '$(System.ArtifactsDirectory)'
       - script: |
-          ls
+          az aks get-credentials --name $(cluster_name) --resource-group $(resource_group)
           kubectl apply -f deployment.yaml
         displayName: 'kubectl apply -f deployment.yaml'
         workingDirectory: '$(System.ArtifactsDirectory)'
