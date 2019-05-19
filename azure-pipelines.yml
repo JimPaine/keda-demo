@@ -138,13 +138,13 @@ stages:
       steps:
       - script: wget https://github.com/Azure/azure-functions-core-tools/releases/download/2.7.1158/Azure.Functions.Cli.linux-x64.2.7.1158.zip
         displayName: 'download func cli'
-        workingDirectory: ./functions/http
+        workingDirectory: ./functions/queue
       - script: unzip Azure.Functions.Cli.linux-x64.2.7.1158.zip
         displayName: 'unzip func cli'
-        workingDirectory: ./functions/http
+        workingDirectory: ./functions/queue
       - script: chmod +x func
         displayName: 'make func executable'
-        workingDirectory: ./functions/http
+        workingDirectory: ./functions/queue
 
       - script: |
           terraform init \
@@ -182,7 +182,7 @@ stages:
 
       - script: ./func init --docker-only --worker-runtime dotnet
         displayName: 'Dockerise func'
-        workingDirectory: ./functions/http
+        workingDirectory: ./functions/queue
       
       - script: docker login -u $(acr_user) -p $(acr_password) $(acr_server)
         displayName: 'docker login'
