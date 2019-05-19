@@ -15,6 +15,6 @@ output "acr_user" {
 }
 
 output "queue-connection-string" {
-    value = "${azurerm_storage_account.keda.primary_queue_endpoint}"
+    value = "${azurerm_storage_account.keda.primary_connection_string}"
 }
 
