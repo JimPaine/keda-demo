@@ -156,6 +156,8 @@ stages:
           buildType: current
           artifactName: deploy
           downloadPath: '$(System.ArtifactsDirectory)'
-      - script: kubectl apply -f ./deploy/deployment.yaml
+      - script: |
+          ls
+          kubectl apply -f ./deploy/deployment.yaml
         displayName: 'kubectl apply -f deployment.yaml'
         workingDirectory: '$(System.ArtifactsDirectory)'
