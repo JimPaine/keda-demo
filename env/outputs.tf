@@ -13,8 +13,3 @@ output "acr_password" {
 output "acr_user" {
     value = "${azurerm_container_registry.keda.admin_username}"
 }
-
-output "queue-connection-string" {
-    value = "${azurerm_storage_account.keda.primary_connection_string}"
-}
-

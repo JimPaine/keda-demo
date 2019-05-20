@@ -22,3 +22,14 @@ resource "kubernetes_secret" "demo" {
 
   type = "kubernetes.io/dockercfg"
 }
+
+resource "kubernetes_secret" "queue" {
+  metadata {
+    name      = "queue"
+    namespace = "default"
+  }
+
+  data {
+    "queueConnectionString" = "${azurerm_storage_account.keda.primary_connection_string}"
+  }
+}

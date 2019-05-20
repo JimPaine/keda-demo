@@ -8,7 +8,7 @@ namespace queue
     public static class queue
     {
         [FunctionName("queue")]
-        public static void Run([QueueTrigger("kedaqueue", Connection = "queue-connection-string")]string myQueueItem, ILogger log)
+        public static void Run([QueueTrigger("kedaqueue", Connection = "queueConnectionString")]string myQueueItem, ILogger log)
         {
             log.LogInformation($"C# Queue trigger function processed: {myQueueItem}");
         }
