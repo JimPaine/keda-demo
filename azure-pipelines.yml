@@ -178,7 +178,7 @@ stages:
   
         inputs:
           rootDirectory: ./functions/queue
-          targetFiles: '**/*.json'
+          targetFiles: '**/appsettings.json'
 
       - script: ./func init --docker-only --worker-runtime dotnet
         displayName: 'Dockerise func'
