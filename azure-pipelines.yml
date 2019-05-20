@@ -180,7 +180,7 @@ stages:
         displayName: 'docker build'
       - script: docker push $(acr_server)/queue:$(Build.BuildId)
         displayName: 'docker push'
-      - script: ./func kubernetes deploy --name queue --image-name $(acr_server)/queue:$(Build.BuildId) --pull-secret registry --dry-run --csharp --secret-name queue > deployment.yaml
+      - script: ./func kubernetes deploy --name queue --image-name $(acr_server)/queue:$(Build.BuildId) --pull-secret registry --dry-run --csharp --secret-name queueconnectionstring > deployment.yaml
         displayName: 'Generate k8s deployment'
         workingDirectory: ./functions/queue
       - task: PublishPipelineArtifact@0

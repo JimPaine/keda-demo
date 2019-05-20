@@ -25,7 +25,7 @@ resource "kubernetes_secret" "demo" {
 
 resource "kubernetes_secret" "queue" {
   metadata {
-    name      = "queue"
+    name      = "queueconnectionstring"
     namespace = "default"
   }
 
