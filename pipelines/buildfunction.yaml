@@ -1,0 +1,75 @@
+parameters:
+  name: ''
+  functionDirectory: ''
+
+jobs:
+- job: ${{ parameters.name }}
+  variables:
+    - group: 'Terraform Service Principal'
+    - group: 'Terraform State'
+    - name: tfstate_key
+      value: 'jimpaine.keda-demo.master.tfstate'
+    - name: resource_name
+      value: 'keda'
+    - name: acr_server
+      value: 'placeholder'
+    - name: acr_password
+      value: 'placeholder'
+    - name: acr_user
+      value: 'placeholder'
+  pool:      
+    vmImage: 'Ubuntu-16.04'
+  steps:
+  - script: wget https://github.com/Azure/azure-functions-core-tools/releases/download/2.7.1158/Azure.Functions.Cli.linux-x64.2.7.1158.zip
+    displayName: 'download func cli'
+    workingDirectory: ${{ parameters.functionDirectory }}
+  - script: unzip Azure.Functions.Cli.linux-x64.2.7.1158.zip
+    displayName: 'unzip func cli'
+    workingDirectory: ${{ parameters.functionDirectory }}
+  - script: chmod +x func
+    displayName: 'make func executable'
+    workingDirectory: ${{ parameters.functionDirectory }}
+  - script: |
+      terraform init \
+        -backend-config="resource_group_name=$(tfstate_resource_group)" \
+        -backend-config="storage_account_name=$(tfstate_storage_account)" \
+        -backend-config="container_name=$(tfstate_container)" \
+        -backend-config="key=$(tfstate_key)" \
+        -backend-config="access_key=$(tfstate_access_key)"
+    workingDirectory: ./env
+    displayName: 'Terraform init'
+
+  - script: |
+      acr_server=$(terraform output -json acr_server | jq '.value' | tr -d '"')   
+      echo "##vso[task.setvariable variable=acr_server;]$acr_server
+      acr_password=$(terraform output -json acr_password | jq '.value' | tr -d '"')   
+      echo "##vso[task.setvariable variable=acr_password;]$acr_password
+      acr_user=$(terraform output -json acr_user | jq '.value' | tr -d '"')   
+      echo "##vso[task.setvariable variable=acr_user;]$acr_user
+    workingDirectory: ./env
+    displayName: 'Get environment details'
+
+  - script: ./func init --docker-only --worker-runtime dotnet
+    displayName: 'func init --docker-only'
+    workingDirectory: ${{ parameters.functionDirectory }}
+  
+  - script: docker login -u $(acr_user) -p $(acr_password) $(acr_server)
+    displayName: 'docker login'
+  - script: docker build ${{ parameters.functionDirectory }} -t $(acr_server)/${{ parameters.name }}:$(Build.BuildId)
+    displayName: 'docker build'
+  - script: docker push $(acr_server)/${{ parameters.name }}:$(Build.BuildId)
+    displayName: 'docker push'
+  - script: |
+      ./func kubernetes deploy \
+        --name ${{ parameters.name }} \
+        --image-name $(acr_server)/${{ parameters.name }}:$(Build.BuildId) \
+        --pull-secret registry \
+        --dry-run \
+        --csharp \
+        --secret-name queueconnectionstring > deployment.yaml
+    displayName: 'Generate k8s deployment'
+    workingDirectory: ${{ parameters.functionDirectory }}
+  - task: PublishPipelineArtifact@0
+    inputs:
+      artifactName: ${{ parameters.name }} 
+      targetPath: ${{ parameters.functionDirectory }}/deployment.yaml
