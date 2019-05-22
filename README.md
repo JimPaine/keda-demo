@@ -29,3 +29,13 @@ The purpose of this demo is to help people get started using KEDA in a wolrd of 
 | Build | QueueFunction | [![Build Status](https://dev.azure.com/jimpaine-msft/github%20pipelines/_apis/build/status/JimPaine.keda-demo?branchName=master&stageName=BuildAndPush&jobName=queue)](https://dev.azure.com/jimpaine-msft/github%20pipelines/_build/latest?definitionId=44&branchName=master) |
 | Deploy | HttpFunction | [![Build Status](https://dev.azure.com/jimpaine-msft/github%20pipelines/_apis/build/status/JimPaine.keda-demo?branchName=master&stageName=Deploy&jobName=http)](https://dev.azure.com/jimpaine-msft/github%20pipelines/_build/latest?definitionId=44&branchName=master) |
 | Deploy | QueueFunction | [![Build Status](https://dev.azure.com/jimpaine-msft/github%20pipelines/_apis/build/status/JimPaine.keda-demo?branchName=master&stageName=Deploy&jobName=queue)](https://dev.azure.com/jimpaine-msft/github%20pipelines/_build/latest?definitionId=44&branchName=master) |
+
+## Get up and running
+
+Start by forking this repository, we will then setup Terraform with a Service Principal and a remote storage account, so we can automate the provisioning of the environment.
+
+### Steps
+
+- [1. Terraform Service Principal](/docs/TerraformSP.md)
+- [2. Terraform State](/docs/TerraformState.md)
+- [3. Azure DevOps Pipelines](/docs/AzurePipeline.md)
